@@ -14,7 +14,6 @@ backend:
         - nvm install 20.19.0
         - nvm use 20.19.0
         - node -v && npm -v
-        # Remove stale lock so CI can resolve compatible versions
         - rm -f package-lock.json
     build:
       commands:
@@ -33,7 +32,6 @@ frontend:
         - nvm install 20.19.0
         - nvm use 20.19.0
         - node -v && npm -v
-        # Use same fresh resolution for the frontend build
         - rm -f package-lock.json
         - npm install --no-audit --no-fund
     build:
