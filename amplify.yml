@@ -14,13 +14,18 @@ backend:
         - nvm install 20.19.0
         - nvm use 20.19.0
         - node -v && npm -v
-        - rm -f package-lock.json
+        # optional: show repo layout
+        - ls -la
+        - ls -la amplify || true
+        - ls -la amplify/data || true
     build:
       commands:
         - set -e
+        - rm -f package-lock.json
         - npm install --no-audit --no-fund
-        - npx ampx --version
-        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID --verbose
+        # ✅ call ampx explicitly from the CLI package
+        - npx --yes --package @aws-amplify/cli ampx --version
+        - npx --yes --package @aws-amplify/cli ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID --verbose
 
 frontend:
   phases:
@@ -32,6 +37,9 @@ frontend:
         - nvm install 20.19.0
         - nvm use 20.19.0
         - node -v && npm -v
+        # ✅ fetch the latest amplify_outputs.json for this branch BEFORE building
+        - npx --yes --package @aws-amplify/cli ampx generate outputs --branch $AWS_BRANCH --app-id $AWS_APP_ID
+        - test -f amplify_outputs.json || (echo "amplify_outputs.json not found" && exit 1)
         - rm -f package-lock.json
         - npm install --no-audit --no-fund
     build:
