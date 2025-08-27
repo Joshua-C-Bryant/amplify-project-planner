@@ -1,4 +1,5 @@
 import { defineBackend } from '@aws-amplify/backend';
 import { data } from './data/resource';
 
-defineBackend({ data });
+const backend = defineBackend({ data });
+export default backend;
