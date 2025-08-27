@@ -6,10 +6,14 @@ const schema = a.schema({
       name: a.string().required(),
       startDate: a.date().required(),
       endDate: a.date().required(),
-      statusMode: a.enum(['auto', 'manual']).default('auto'),
-      manualStatus: a.enum(['Initiated', 'In Progress', 'Completed']).nullable(),
+
+      // Make it optional in the schema; your UI sets it on create/update.
+      statusMode: a.enum(['auto', 'manual']),
+
+      // Optional: only set when statusMode === 'manual'
+      manualStatus: a.enum(['Initiated', 'In Progress', 'Completed']),
     })
-    .authorization(allow => [allow.publicApiKey()]) // demo-friendly
+    .authorization((allow) => [allow.publicApiKey()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
